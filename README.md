@@ -1,8 +1,18 @@
-The included Python 3.7 code is our implementation of REFINE, as described in CVPR 2022 Submission #2659, "Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction".
-To get started, please refer to the Jupyter Notebook "Simulate_Full_Pipeline.ipynb", which REFINES several examples. 
+# Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction
 
-Code was tested on a GTX 1080Ti GPU and Intel_R_Xeon_R_E5-1650_v3_3 CPU (or similar), running Ubuntu 18.04.3. 
+![image](https://user-images.githubusercontent.com/20059131/170858764-9ba69aa1-98f4-4408-8166-9ea7360653f4.png)
+
+
+# Intro
+
+This repo contains the code used for the CVPRW 2022 paper, "Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction" authored by Brandon Leung, Chih-Hui Ho, and Nuno Vasconcelos. For more details, please refer to the project website: http://www.svcl.ucsd.edu/projects/OOWL/CVPRW2022_REFINE.html
+
+The Jupyter Notebook "Simulate_Full_Pipeline.ipynb" is useful for getting started, and provides code for refining several examples. 
+
+## Dependencies
+
 The following python packages are required:
+
 - tqdm
 - PIL
 - numpy
@@ -17,7 +27,21 @@ The following python packages are required:
 - open3d
 - sklearn
 
-The following assets were used for experiments in the paper. Please refer to them to reproduce experiments.
+For a precise list of the configuration used in the paper, refer to packages listed in the standard.yml file.
+
+## Dataset
+
+![image](https://user-images.githubusercontent.com/20059131/170858967-d7cae941-5428-4358-847d-e7c32e223156.png)
+
+The 3D Object Domain Dataset Suite (3D-ODDS) is a hierarchical multiview, multidomain image dataset with 3D meshes that was created for rigoriously evaluting the effectinveness of REFINE. To download, use one of the links below (zip archive password is cvpr2659).
+
+* [Download](https://3dodds.s3.us-west-1.amazonaws.com/3D-ODDS.zip)
+* [Download Mirror](https://drive.google.com/file/d/1_u9Gp9luKeuTLVBw_qFJl1JxQ3jKON26/view?usp=sharing)
+
+## Related Work
+
+The following materials were used for experiments in the paper:
+
 - ShapeNet https://shapenet.org/ 
 - Pix3d http://pix3d.csail.mit.edu/
 - Pix2Mesh. Used under the Apache License 2.0. Commit 7c5a7a1. https://github.com/nywang16/Pixel2Mesh
@@ -29,3 +53,17 @@ F-score and chamfer-L2 is built in. For the EMD and 3D IoU metrics, please refer
 - https://github.com/daerduoCarey/PyTorchEMD
 - https://gist.github.com/LMescheder/b5e03ffd1bf8a0dfbb984cacc8c99532
 - https://github.com/autonomousvision/occupancy_networks/blob/master/im2mesh/eval.py
+
+## Citations
+
+If you use this code for your research, please consider citing:
+
+```
+@InProceedings{Leung_2022_CVPR,
+		author = {Leung, Brandon and Ho, Chih-Hui and Vasconcelos, Nuno},
+		title = {Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction},
+		booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+		month = {June},
+		year = {2022}
+		}
+```
