@@ -1,0 +1,19 @@
+
+refinement:
+  num_iterations: 400
+  learning_rate: 0.00007
+
+training:
+  sil_lam: 10
+  l2_lam: 100
+  lap_smoothness_lam: 10
+  normal_consistency_lam: 10
+
+  img_sym_num_azim: 1
+  img_sym_lam: 80
+  img_sym_bias: 0.0005
+
+  vertex_sym_lam: 20
+  vertex_sym_bias: 0.0005
+  vertex_asym: true
+
