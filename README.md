@@ -1,13 +1,13 @@
-# [Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction](http://www.svcl.ucsd.edu/projects/OOWL/CVPRW2022_REFINE.html)
+# Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction
 
 ![image](https://user-images.githubusercontent.com/20059131/170858764-9ba69aa1-98f4-4408-8166-9ea7360653f4.png)
 
 
 # Intro
 
-This repo contains the code used for the CVPRW 2022 paper, "Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction" authored by Brandon Leung, Chih-Hui Ho, and Nuno Vasconcelos. For more details, please refer to the project website: http://www.svcl.ucsd.edu/projects/OOWL/CVPRW2022_REFINE.html
+This repo contains the code used for the [CVPRW 2022 paper](http://www.svcl.ucsd.edu/projects/OOWL/CVPRW2022_REFINE/REFINE.pdf), "Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction". For more details, please refer to the [project website](http://www.svcl.ucsd.edu/projects/OOWL/CVPRW2022_REFINE.html).
 
-The Jupyter Notebook "Simulate_Full_Pipeline.ipynb" is useful for getting started, and provides code for refining several examples. 
+The Jupyter Notebook [Simulate_Full_Pipeline.ipynb](https://github.com/b7leung/REFINE/blob/main/Simulate_Full_Pipeline.ipynb) is useful for getting started, and provides code for refining several examples. 
 
 ## Dependencies
 
@@ -26,10 +26,10 @@ The following python packages are required:
 - openCV
 - sklearn
 
-For a precise list of the configuration used in the paper, refer to packages listed in the refine_env.yml file. You can also create a conda environment using it with:
+For a precise list of the configuration used in the paper, refer to packages listed in the [refine_env.yml](https://github.com/b7leung/REFINE/blob/main/refine_env.yml) file. You can also create a conda environment using it with:
 
 `
-conda env create --file bio-env.txt 
+conda env create --file refine_env.yml
 `
 
 ## Dataset
