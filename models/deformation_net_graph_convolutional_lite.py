@@ -4,8 +4,8 @@ import torch.nn as nn
 from torch.nn import functional as F
 import pytorch3d
 
-from resnet_backbone import build_backbone
-import general_utils
+from models.resnet_backbone import build_backbone
+from utils import general_utils
 
 
 class DeformationNetworkGraphConvolutionalLite(nn.Module):

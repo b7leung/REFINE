@@ -1,4 +1,4 @@
-name: standard
+name: refine_env
 channels:
   - pytorch3d
   - pytorch
@@ -237,5 +237,5 @@ dependencies:
     - trimesh==3.7.7
     - visdom==0.1.8.9
     - websocket-client==0.57.0
-prefix: /opt/conda/envs/standard
+prefix: /opt/conda/envs/refine_env
 

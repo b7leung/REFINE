@@ -5,7 +5,7 @@ from torch.nn import functional as F
 import pytorch3d
 from pytorch3d.renderer import look_at_view_transform, TexturesVertex, Textures, PointLights
 
-import general_utils
+from utils import general_utils
 
 
 def vertex_symmetry_loss(mesh, sym_plane, device, asym_conf_scores=False, sym_bias=0.005):

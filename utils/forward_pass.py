@@ -3,8 +3,8 @@ import torch
 from torch.nn import functional as F
 from pytorch3d.loss import mesh_laplacian_smoothing, mesh_normal_consistency
 
-import general_utils
-import losses as def_losses
+from utils import general_utils
+from utils import losses as def_losses
 
 
 def batched_forward_pass(cfg, device, deform_net, input_batch):

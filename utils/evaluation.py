@@ -12,10 +12,10 @@ import numpy as np
 import torch
 import pytorch3d
 import pytorch3d.loss
-import open3d
-open3d.utility.set_verbosity_level(open3d.utility.VerbosityLevel.Error)
+#import open3d
+#open3d.utility.set_verbosity_level(open3d.utility.VerbosityLevel.Error)
 
-import general_utils
+from utils import general_utils
 
 
 def sample_points(mesh1, mesh2, num_points, margin=0.5):

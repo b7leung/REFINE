@@ -5,8 +5,8 @@ from pytorch3d.renderer import look_at_view_transform
 from tqdm.autonotebook import tqdm
 import pandas as pd
 
-from deformation_net_graph_convolutional_lite import DeformationNetworkGraphConvolutionalLite
-from forward_pass import batched_forward_pass
+from models.deformation_net_graph_convolutional_lite import DeformationNetworkGraphConvolutionalLite
+from utils.forward_pass import batched_forward_pass
 
 
 class MeshRefiner():
