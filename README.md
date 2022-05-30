@@ -1,4 +1,4 @@
-# Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction
+# [Black-Box Test-Time Shape REFINEment for Single View 3D Reconstruction](http://www.svcl.ucsd.edu/projects/OOWL/CVPRW2022_REFINE.html)
 
 ![image](https://user-images.githubusercontent.com/20059131/170858764-9ba69aa1-98f4-4408-8166-9ea7360653f4.png)
 
@@ -24,10 +24,13 @@ The following python packages are required:
 - torchvision
 - scipy
 - openCV
-- open3d
 - sklearn
 
-For a precise list of the configuration used in the paper, refer to packages listed in the standard.yml file.
+For a precise list of the configuration used in the paper, refer to packages listed in the refine_env.yml file. You can also create a conda environment using it with:
+
+`
+conda env create --file bio-env.txt 
+`
 
 ## Dataset
 
