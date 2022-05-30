@@ -29,10 +29,8 @@ def vertex_symmetry_loss(mesh, sym_plane, device, asym_conf_scores=False, sym_bi
         raise ValueError("sym_plane needs to be a unit normal")
 
     reflect_matrix = torch.tensor(np.eye(3) - 2*N.T@N, dtype=torch.float).to(device)
-
     mesh_verts = mesh.verts_packed()
     nbrs = NearestNeighbors(n_neighbors=1, algorithm='ball_tree').fit(mesh_verts.detach().cpu())
-
     sym_points = mesh_verts @ reflect_matrix
     distances, indices = nbrs.kneighbors(sym_points.detach().cpu())
     nn_dists = torch.unsqueeze(torch.sum(F.mse_loss(sym_points, torch.squeeze(mesh_verts[indices],1), reduction='none'), 1),1)
@@ -59,9 +57,11 @@ def vertex_symmetry_loss_batched(meshes, sym_plane, device, asym_conf_scores=Non
         torch.tensor: loss value
     """
     total_vtx_sym_loss = 0
+
     for mesh in meshes:
         curr_sym_loss = vertex_symmetry_loss(mesh, sym_plane, device, asym_conf_scores=asym_conf_scores, sym_bias=sym_bias)
         total_vtx_sym_loss += curr_sym_loss
+
     avg_vtx_sym_loss = total_vtx_sym_loss / len(meshes)
     return avg_vtx_sym_loss
 
@@ -106,7 +106,6 @@ def image_symmetry_loss(mesh, sym_plane, num_azim, device, asym_conf_scores=None
         R.append(R_sym)
     R = torch.cat(R)
     T = torch.cat([T_half_1, T_half_1])
-
     meshes = mesh.extend(num_views_on_half*2)
     if asym_conf_scores is not None:
         meshes_asym_conf_scores = asym_conf_scores.unsqueeze(0).repeat(num_views_on_half*2,1,3)
@@ -162,9 +161,11 @@ def image_symmetry_loss_batched(meshes, sym_plane, num_azim, device, asym_conf_s
     """
     total_img_sym_loss = 0
     sym_img_sets = []
+
     for mesh in meshes:
         curr_sym_loss, curr_sym_img_set = image_symmetry_loss(mesh, sym_plane, num_azim, device, asym_conf_scores=asym_conf_scores, sym_bias=sym_bias)
         total_img_sym_loss += curr_sym_loss
         sym_img_sets.append(curr_sym_img_set)
+
     avg_img_sym_loss = total_img_sym_loss / len(meshes)
     return avg_img_sym_loss, sym_img_sets
