@@ -9,6 +9,21 @@ from utils import general_utils
 
 
 def vertex_symmetry_loss(mesh, sym_plane, device, asym_conf_scores=False, sym_bias=0.005):
+    """Vertex based symmetry loss.
+
+    Args:
+        mesh (Mesh): pytorch3d mesh object
+        sym_plane (torch.tensor): vector orthogonal to the plane of symmetry
+        device (torch.device): pytorch device
+        asym_conf_scores (bool, optional): If asymmetry confidence scores should be used. Defaults to False.
+        sym_bias (float, optional): Bias term for symmetry. Defaults to 0.005.
+
+    Raises:
+        ValueError: Symmetry plane vector needs to be a unit normal vector.
+
+    Returns:
+        torch.tensor: loss value
+    """
     N = np.array([sym_plane])
     if np.linalg.norm(N) != 1:
         raise ValueError("sym_plane needs to be a unit normal")
@@ -26,10 +41,23 @@ def vertex_symmetry_loss(mesh, sym_plane, device, asym_conf_scores=False, sym_bi
         avg_sym_loss = torch.mean(torch.log(torch.div(1,asym_conf_scores))*sym_bias + ((asym_conf_scores)*nn_dists))
     else:
         avg_sym_loss = torch.mean(nn_dists)
+    
     return avg_sym_loss
 
 
 def vertex_symmetry_loss_batched(meshes, sym_plane, device, asym_conf_scores=None, sym_bias=0.005):
+    """Batched version of the vertex symmetry loss.
+
+    Args:
+        meshes (Mesh): batch of pytorch3d mesh object
+        sym_plane (torch.tensor): vector orthogonal to the plane of symmetry
+        device (torch.device): pytorch device
+        asym_conf_scores (bool, optional): If asymmetry confidence scores should be used. Defaults to False.
+        sym_bias (float, optional): Bias term for symmetry. Defaults to 0.005.
+
+    Returns:
+        torch.tensor: loss value
+    """
     total_vtx_sym_loss = 0
     for mesh in meshes:
         curr_sym_loss = vertex_symmetry_loss(mesh, sym_plane, device, asym_conf_scores=asym_conf_scores, sym_bias=sym_bias)
@@ -39,6 +67,24 @@ def vertex_symmetry_loss_batched(meshes, sym_plane, device, asym_conf_scores=Non
 
 
 def image_symmetry_loss(mesh, sym_plane, num_azim, device, asym_conf_scores=None, sym_bias=0.005, dist=1.9):
+    """Computes the image-based symmetry loss.
+
+    Args:
+        mesh (Mesh): pytorch3d mesh object
+        sym_plane (torch.tensor): vector orthogonal to the plane of symmetry
+        num_azim (int): number of azimuths to use when rendering
+        device (torch.device): pytorch device
+        asym_conf_scores (torch.tensor, optional): tensor of asymmetry confidence scores. Defaults to None.
+        sym_bias (float, optional): Symmetry bias term to use for loss. Defaults to 0.005.
+        dist (float, optional): Distance to use when rendering. Defaults to 1.9.
+
+    Raises:
+        ValueError: Symmetry plane vector needs to be a unit normal vector.
+
+    Returns:
+        torch.tensor: loss value
+        torch.tensor: renders for image symmetry
+    """
     N = np.array([sym_plane])
     if np.linalg.norm(N) != 1:
         raise ValueError("sym_plane needs to be a unit normal")
@@ -100,6 +146,20 @@ def image_symmetry_loss(mesh, sym_plane, num_azim, device, asym_conf_scores=None
     
 
 def image_symmetry_loss_batched(meshes, sym_plane, num_azim, device, asym_conf_scores=None, sym_bias=0.005):
+    """Computes the image-based symmetry loss for a batch.
+
+    Args:
+        meshes (Mesh): batch of pytorch3d mesh object
+        sym_plane (torch.tensor): vector orthogonal to the plane of symmetry
+        num_azim (int): number of azimuths to use when rendering
+        device (torch.device): pytorch device
+        asym_conf_scores (torch.tensor, optional): tensor of asymmetry confidence scores. Defaults to None.
+        sym_bias (float, optional): Symmetry bias term to use for loss. Defaults to 0.005.
+
+    Returns:
+        torch.tensor: loss values
+        torch.tensor: renders for image symmetry
+    """
     total_img_sym_loss = 0
     sym_img_sets = []
     for mesh in meshes:

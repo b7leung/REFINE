@@ -15,6 +15,19 @@ from pytorch3d.renderer import (
 )
 
 def render_mesh_HQ(mesh, R, T, device, img_size=512, aa_factor=10):
+    """Provides a high quality rendering of mesh.
+
+    Args:
+        mesh (Mesh): Pytorch3d mesh object to render
+        R (torch.tensor): camera rotation
+        T (torch.tensor): camera translation
+        device (torch.device): pytorch device
+        img_size (int, optional): rendered image size. Defaults to 512.
+        aa_factor (int, optional): anti-aliasing factor. Defaults to 10.
+
+    Returns:
+        torch.tensor: Rendered image.
+    """
     cameras = OpenGLPerspectiveCameras(device=device, R=R, T=T)
     raster_settings = RasterizationSettings(
         image_size=img_size*aa_factor, 
@@ -48,6 +61,15 @@ def render_mesh_HQ(mesh, R, T, device, img_size=512, aa_factor=10):
 
 
 def rot_x(theta, degrees=True):
+    """Returns a rotation matrix about the x axis by theta.
+
+    Args:
+        theta (int): amount to rotate
+        degrees (bool, optional): If theta is in degrees, or in radians. Defaults to True.
+
+    Returns:
+        np.array: rotation matrix
+    """
     if degrees:
         theta = theta * (np.pi/180)
     rot_matrix = np.array([[1, 0, 0],
@@ -56,7 +78,17 @@ def rot_x(theta, degrees=True):
                           ])
     return rot_matrix
 
+
 def rot_y(theta, degrees=True):
+    """Returns a rotation matrix about the y axis by theta.
+
+    Args:
+        theta (int): amount to rotate
+        degrees (bool, optional): If theta is in degrees, or in radians. Defaults to True.
+
+    Returns:
+        np.array: rotation matrix
+    """
     if degrees:
         theta = theta * (np.pi/180)
     rot_matrix = np.array([[np.cos(theta), 0, np.sin(theta)],
@@ -65,7 +97,17 @@ def rot_y(theta, degrees=True):
                           ])
     return rot_matrix
 
+
 def rot_z(theta, degrees=True):
+    """Returns a rotation matrix about the z axis by theta.
+
+    Args:
+        theta (int): amount to rotate
+        degrees (bool, optional): If theta is in degrees, or in radians. Defaults to True.
+
+    Returns:
+        np.array: rotation matrix
+    """
     if degrees:
         theta = theta * (np.pi/180)
     rot_matrix = np.array([[np.cos(theta), -np.sin(theta), 0],
@@ -75,8 +117,26 @@ def rot_z(theta, degrees=True):
     return rot_matrix
 
 
-def show_refinement_results(input_image, mesh_original, mesh_processed, R, T, device, num_novel_view=3, img_size=224, pred_dist=None, pred_elev=None, pred_azim=None):
+def show_refinement_results(input_image, mesh_original, mesh_processed, R, T, device,
+                            num_novel_view=3, img_size=224, pred_dist=None, pred_elev=None, pred_azim=None):
+    """Plots the results of refinement for visualization.
 
+    Args:
+        input_image (torch.tensor): input image for refinement
+        mesh_original (Mesh): original mesh
+        mesh_processed (Mesh): refined mesh
+        R (torch.tensor): rotation matrix
+        T (torch.tensor): translation matrix
+        device (torch.device): pytorch device
+        num_novel_view (int, optional): Number of views to render. Defaults to 3.
+        img_size (int, optional): Size of plot. Defaults to 224.
+        pred_dist (int, optional): predicted distance for camera. Defaults to None.
+        pred_elev (int, optional): predicted elevation for camera. Defaults to None.
+        pred_azim (int, optional): predicted azimuth for camera. Defaults to None.
+
+    Returns:
+        matplotlib plot
+    """
     mesh_original_render = render_mesh_HQ(mesh_original, R, T, device, img_size=img_size)
     mesh_processed_render = render_mesh_HQ(mesh_processed, R, T, device, img_size=img_size)
     

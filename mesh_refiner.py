@@ -12,6 +12,12 @@ from utils.forward_pass import batched_forward_pass
 class MeshRefiner():
 
     def __init__(self, cfg, device):
+        """Class to facilitate refining meshes.
+
+        Args:
+            cfg (dict): Config dictionary.
+            device (torch.device): PyTorch device to perform computations on.
+        """
         self.cfg = cfg
         self.device = device
 
@@ -27,7 +33,19 @@ class MeshRefiner():
 
 
     def refine_mesh(self, mesh, rgba_image, R, T, record_debug=False):
+        """Performs refinement on a mesh.
 
+        Args:
+            mesh (Mesh): PyTorch3D mesh object.
+            rgba_image (torch.tensor): Corresponding rgba image for the mesh.
+            R (torch.tensor): Rotation matrix for camera.
+            T (torch.tensor): Translation matrix for camera
+            record_debug (bool, optional): If intermediate results should be saved for debugging. Defaults to False.
+
+        Returns:
+            mesh: Refined mesh.
+            dict: Dictionary with information during refinement, including loss information during training.
+        """
         # prep inputs used during training
         image = rgba_image[:,:,:3]
         image_in = torch.unsqueeze(torch.tensor(image/255, dtype=torch.float).permute(2,0,1),0).to(self.device)
@@ -49,7 +67,6 @@ class MeshRefiner():
 
         # starting REFINEment
         for i in tqdm(range(self.num_iterations)):
-
             # forward pass
             deform_net.train()
             optimizer.zero_grad()

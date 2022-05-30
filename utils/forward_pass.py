@@ -8,6 +8,23 @@ from utils import losses as def_losses
 
 
 def batched_forward_pass(cfg, device, deform_net, input_batch):
+    """Forward pass through refinement network.
+
+    Args:
+        cfg (dict): config dictionary
+        device (torch.device): pytorch device to compute on
+        deform_net (nn.Module): REFINE network
+        input_batch (dict): Input batch; Dictionary with keys-value pairs:
+            - mesh_verts: mesh vertices tensor [1, n, 3]
+            - image: image tensor [1, 3, 224, 224]
+            - R: rotation tensor [1, 3, 3]
+            - T: translation tensor [1, 3]
+            - mesh: Mesh object
+            - mask: mask tensor [1, 224, 224] 
+
+    Returns:
+        Tuple: returns the loss_dict, deformed_meshes, and forward_pass_info
+    """
     forward_pass_info = {}
 
     # deforming mesh
@@ -21,7 +38,7 @@ def batched_forward_pass(cfg, device, deform_net, input_batch):
     mesh_batch = input_batch["mesh"].to(device)
     deformed_meshes = mesh_batch.offset_verts(deformation_output)
 
-    # computing network's losses
+    # computing network's losses, and storing into a dictionary.
     loss_dict = {}
     if cfg["training"]["sil_lam"] > 0:
         R = input_batch["R"]

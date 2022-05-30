@@ -8,10 +8,8 @@ import random
 
 import torch
 import numpy as np
-# Util function for loading meshes
 from pytorch3d.io import load_objs_as_meshes
 from pytorch3d.io import load_obj
-# Data structures and functions for rendering
 from pytorch3d.structures import Meshes
 from pytorch3d.renderer import Textures
 from pytorch3d.renderer import (
@@ -34,14 +32,12 @@ import trimesh
 from sklearn.neighbors import NearestNeighbors
 
 
-
-# General config
 def load_config(path, default_path=None):
     ''' Loads config file.
 
     Args:  
         path (str): path to config file
-        default_path (bool): whether to use default path
+        default_path (bool, optional): Whether to use default path. Defaults to None.
     '''
     # Load configuration from file itself
     with open(path, 'r') as f:
@@ -72,7 +68,6 @@ def update_recursive(dict1, dict2):
     Args:
         dict1 (dict): first dictionary to be updated
         dict2 (dict): second dictionary which entries should be used
-
     '''
     for k, v in dict2.items():
         if k not in dict1:
@@ -83,8 +78,17 @@ def update_recursive(dict1, dict2):
             dict1[k] = v
 
 
-# based on https://github.com/facebookresearch/pytorch3d/issues/51
 def load_untextured_mesh(mesh_path, device):
+    """Loads a mesh from a file path, into a Pytorch3D mesh with no texture.
+       Based on https://github.com/facebookresearch/pytorch3d/issues/51
+
+    Args:
+        mesh_path (str): mesh path location
+        device (torch.device): pytorch device
+
+    Returns:
+        Mesh: pytorch3d mesh object.
+    """
     mesh = load_objs_as_meshes([mesh_path], device=device, load_textures=False)
     verts, faces_idx, _ = load_obj(mesh_path)
     faces = faces_idx.verts_idx
@@ -99,7 +103,25 @@ def load_untextured_mesh(mesh_path, device):
 
 
 # for rendering a single image
-def render_mesh(mesh, R, T, device, img_size=512, silhouette=False, custom_lights="", differentiable=True, return_renderer_only=False, black_bg=False):
+def render_mesh(mesh, R, T, device, img_size=512, silhouette=False, custom_lights="",
+                differentiable=True, return_renderer_only=False, black_bg=False):
+    """Renders images from a mesh.
+
+    Args:
+        mesh (Mesh): pytorch3d mesh object to render
+        R (torch.tensor): rotation matrix for camera when rendering
+        T (torch.tensor): translation matrix for camera when rendering
+        device (torch.device): pytorch device
+        img_size (int, optional): size of image to render. Defaults to 512.
+        silhouette (bool, optional): Render sillhouete only. Defaults to False.
+        custom_lights (str, optional): lights to use. Defaults to "".
+        differentiable (bool, optional): If rendering should be differentiable. Defaults to True.
+        return_renderer_only (bool, optional): If only the renderer should be returned. Defaults to False.
+        black_bg (bool, optional): If a black background should be used. Defaults to False.
+
+    Returns:
+        torch.tensor: rendered image.
+    """
     cameras = OpenGLPerspectiveCameras(device=device, R=R, T=T)
 
     if silhouette:
@@ -172,10 +194,14 @@ def render_mesh(mesh, R, T, device, img_size=512, silhouette=False, custom_light
 
 
 def rotate_verts(RT, verts):
-    """
-    Inputs:
-    - RT: (N, 4, 4) array of extrinsic matrices
-    - verts: (N, V, 3) array of vertex positions
+    """Rotates vertices.
+
+    Args:
+        RT (torch.tensor): (N, 4, 4) array of extrinsic matrices
+        verts (torch.tensor): (N, V, 3) array of vertex positions
+
+    Returns:
+        torch.tensor: batch of rotated vertices
     """
     singleton = False
     if RT.dim() == 2:
@@ -197,6 +223,16 @@ def rotate_verts(RT, verts):
 
 
 def reflect_batch(batch, sym_plane, device):
+    """Reflects a batch of vertices across a plane of symmetry
+
+    Args:
+        batch (torch.tensor): batch of vertices
+        sym_plane (torch.tensor): vector orthogonal to the plane of symmetry
+        device (torch.device): pytorch device
+
+    Returns:
+        torch.tensor: batch of reflected vertices
+    """
     N = np.array([sym_plane])
     reflect_matrix = torch.tensor(np.eye(3) - 2*N.T@N, dtype=torch.float).to(device)
     for i in range(batch.shape[0]):
@@ -205,7 +241,17 @@ def reflect_batch(batch, sym_plane, device):
 
 
 def align_and_normalize_verts_original(verts, R, T, device):
+    """Aligns and normalizes vertices
 
+    Args:
+        verts (torch.tensor): vertices
+        R (torch.tensor): rotation matrix
+        T (torch.tensor): translation matrix
+        device (torch.device): gpu to run on
+
+    Returns:
+        torch.tensor: normalized vertices
+    """
     # creating batch of 4x4 extrinsic matrices from rotation matrices and translation vectors
     temp = torch.tensor([0,0,0,1]).to(device)
     temp = temp.repeat(R.shape[0],1).unsqueeze(1)
